@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Login and Registration</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h2>Welcome!</h2>
+            <div id="messages" style = "width: 100%; padding: 15px;">
+                {% if messages %}
+                    {% for message in messages %}
+                    <ul>
+                    <li style="color:red">{{ message }}</li>
+                    </ul>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <fieldset style="width : 45%; display : inline-block;">
+                <h3>Register</h3>
+                <form action="/register" method="POST">
+                    {% csrf_token %}
+                    <div>
+                        <label for="name">Name</label>
+                        <input id="name" type="text" class="validate" name="name">
+                    </div>
+                    <div>
+                        <label for="alias">Alias</label>
+                        <input id="alias" type="text" class="validate" name="alias">
+                    </div>
+                    <div>
+                        <label for="email">Email</label>
+                        <input id="email" type="text" class="validate" name="email">
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input id="password" type="password" class="validate" name="password">
+                    </div>
+                    <p>*Password should be at least 8 characters</p>
+                    <div>
+                        <label for="password_confirm">Confirm Password</label>
+                        <input id="password_confirm" type="password" class="validate" name="password_confirm">
+                    </div>
+                    <div>
+                        <label for="bday">Birthday:</label>
+                        <input id="bday" type="date" class="validate" name="bday">
+                    </div>
+                    <input type="submit" value="Register">
+                </form>
+            </fieldset>
+            <fieldset style="width : 45%; display: inline-block;">
+                <h3>Login</h3>
+                <form action="{% url 'login:log_in' %}" method="POST">
+                    {% csrf_token %}
+                    <div>
+                        <label for="email">Email</label>
+                        <input id="email" type="email" class="validate" name="email">
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input id="password" type="password" class="validate" name="password">
+                    </div>
+                    <input type="submit" value="Login">
+                </form>
+            </fieldset>
+        </div>
+    </body>
+</html>

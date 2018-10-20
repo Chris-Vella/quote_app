@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Dashboard</title>
+    </head>
+    <body>
+        <div class="wrapper" style="width: 100%;">
+            <div class="header">
+                <h5 style="text-align: right"><a href="{% url 'quote:index' %}">Home</a> | <a href="/logout">Logout</a></h5>
+                <br>
+                <p>Welcome, <b>{{poster.alias}}!</b></p>
+                <div id="messages">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <ul class="messages">
+                            <li>{{ message }}</li>
+                        </ul>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="content" style="display: inline-block; width: 100%; height: 100%;">
+                <div style="display: inline-block; padding: 2%;">
+                    <div class="quotebox" style=" height: 500px; width: 350px;">
+                        <h3>Quoteable Quotes</h3>
+                        <fieldset style=" overflow: scroll; height: 500px; width: 350px;">
+                            {% if quotes and not favorites %}
+                                {% for quote in quotes %}
+                                <div class ="quote">
+                                    <fieldset>
+                                        <h4><span style="color:red">{{ quote.author }}</span>:</h4> 
+                                        <h3>{{ quote.quote }}</h3>
+                                        <br>
+                                        <p>Posted by: <a href="{% url 'quote:user' user_id=quote.poster.id %}">{{quote.poster.alias}}</a></p>
+                                        <form action="favorite/{{ quote.id }}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" name="submit" value="Add to my list" >
+                                        </form>
+                                    </fieldset>
+                                </div>
+                                {% endfor %}
+                            {% endif %}    
+                        </fieldset>
+                    </div>
+                </div>
+                <div style="display: inline-block; padding: 2%;">
+                    <div class="favorite_quotes" style="display: inline-block; height: 500px; width: 350px;">
+                        <h3>Your Favorites</h3>
+                        <fieldset style=" overflow: scroll; height: 500px; width: 350px;">
+                            <div>
+                                {% if favorites %}
+                                    {% for favorite in favorites %}
+                                    <fieldset>
+                                        <h4><span style="color:red">{{favorite.quote.author}}</span>: </h4>
+                                        <h3>{{ favorite.quote.quote}}</h3>
+                                        <p>Posted by: <a href="{% url 'quote:user' user_id=favorite.quote.poster.id %} ">{{favorite.quote.poster.alias}}</a></p>
+                                        <form action="delete/{{ favorite.quote.id }}" medthod="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" name="submit" value="Remove from my list" >
+                                        </form>
+                                    </fieldset>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div style="display: inline-block; padding: 2%;">
+                    <div class="submit_quote" style="display: inline-block;  height: 500px; width: 350px;">
+                        <h4>Contribute a Quote</h4>
+                        <form action="{% url 'quote:create' %}" method="POST">
+                            {% csrf_token %}
+                            <div>
+                                <label for="author">Quoted by:</label>
+                                <input type="text" name="author" id="author" value="{{ request.session.user_name }}">
+                            </div>
+                            <div>
+                                <label for="quote">Message:</label>
+                                <textarea rows="5" cols="40" type="text" name="quote"></textarea>
+                            </div>
+                            <input type="submit" value="Submit">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
